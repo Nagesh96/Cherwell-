@@ -1,43 +1,50 @@
-from CherwellAPI import Cherwell
+from CherwellAPI import CherwellClient
 
 # Replace these with your Cherwell API details
 cherwell_url = "https://your-cherwell-instance"
+api_key = "your_api_key"
 username = "your_username"
 password = "your_password"
-client_id = "your_client_id"
 
-# Connect to Cherwell
-cherwell = Cherwell(cherwell_url, username, password, client_id)
+# Create a new CherwellClient Connection
+cherwell_client = CherwellClient.Connection(cherwell_url, api_key, username, password)
 
-# Specify the fields and values for the new change request
-change_request_data = {
-    "Requestor": "John Doe",  # Replace with the actual requestor
-    "Short Description": "Change Request Example",
-    "Change Type": "Standard",  # Adjust based on your Cherwell configuration
+# Create a new instance of a Change Request business object
+change_request = cherwell_client.get_new_business_object("Change Request")
+
+# Define the properties for the new Change Request
+change_request_properties = {
+    "Requestor": "John Doe",
+    "ShortDescription": "Change Request Example",
+    "ChangeType": "Standard",
     "Description": "Details of the change request",
-    "Primary configuration item": "Server001",
-    "Environment": "Production",
-    "Primary CI criticality": "High",
-    "Assign Team": "IT Support",
-    "Assign To": "Support Analyst",
+    "PrimaryConfigurationItem": "Server001",
+    "Environment": "Prod",
+    "PrimaryCICriticality": "High",
+    "AssignTeam": "IT Support",
+    "AssignTo": "Support Analyst",
     "Impact": "High",
     "Priority": "High",
-    "Major Change - checkbox": False,  # Adjust based on your Cherwell configuration
-    "Service Impact": "Yes",
+    "MajorChangeCheckbox": False,
+    "ServiceImpact": "Yes",
     "Project": "ProjectX",
-    "Stakeholder call required": False,
-    "IT SOC Bridge required": False,
-    "IT Impact Description": "Impact details of the change",
-    "Release Manager": "Jane Smith"  # Replace with the actual release manager
+    "StakeholderCallRequired": False,
+    "ITSOCBridgeRequired": False,
+    "ITImpactDescription": "Impact details of the change",
+    "ReleaseManager": "Jane Smith",
+    "Schedule": "Scheduled",
+    "ProposedStartDateAndTime": "2023-12-25T08:00:00",
+    "ProposedEndDateAndTime": "2023-12-25T16:00:00",
+    "Duration": "8 hours"
 }
 
-# Create a new change request
+# Set the properties of the new Change Request
+for key, value in change_request_properties.items():
+    setattr(change_request, key, value)
+
+# Save the new Change Request
 try:
-    response = cherwell.create_business_object("Change Request", change_request_data)
-    if response.get("businessObjectId"):
-        print("New change request created successfully!")
-    else:
-        print("Failed to create change request.")
-        print(response)
+    change_request.Save()
+    print("New change request created successfully!")
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"Failed to create change request. An error occurred: {e}")

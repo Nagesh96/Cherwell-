@@ -1,20 +1,54 @@
-from CherwellAPI import CherwellClient
+import requests
 
-# Create a new CherwellClient Connection
-cherwell_client = CherwellClient.Connection(<base_uri>,<api_key>,<username>,<password>)
+# Replace these with your Cherwell API details
+cherwell_url = "https://your-cherwell-instance"
+username = "your_username"
+password = "your_password"
+api_key = "your_api_key"  # If your Cherwell instance requires an API key
 
-# Create a new instance of a Change business object
-change = cherwell_client.get_new_business_object("Change")
+# API endpoint for creating a Change Request
+api_endpoint = f"{cherwell_url}/api/V1/your_change_request_endpoint"
 
-# Set the properties of the new Change
-change.Description = "This is a test Change"
-change.Status = "Scheduled"
-change.ChangeType = "Standard"
-change.ChangeName = "Test Change"
+# Specify the headers
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": f"Basic {api_key}" if api_key else None
+}
 
-# Save the new Change
-change.Save()
+# Specify the data for the new Change Request
+change_request_data = {
+    "Requestor": "John Doe",
+    "ShortDescription": "Change Request Example",
+    "ChangeType": "Standard",
+    "Description": "Details of the change request",
+    "PrimaryConfigurationItem": "Server001",
+    "Environment": "Prod",
+    "PrimaryCICriticality": "High",
+    "AssignTeam": "IT Support",
+    "AssignTo": "Support Analyst",
+    "Impact": "High",
+    "Priority": "High",
+    "MajorChangeCheckbox": False,
+    "ServiceImpact": "Yes",
+    "Project": "ProjectX",
+    "StakeholderCallRequired": False,
+    "ITSOCBridgeRequired": False,
+    "ITImpactDescription": "Impact details of the change",
+    "ReleaseManager": "Jane Smith",
+    "Schedule": "Scheduled",
+    "ProposedStartDateAndTime": "2023-12-25T08:00:00",
+    "ProposedEndDateAndTime": "2023-12-25T16:00:00",
+    "Duration": "8 hours"
+}
 
-# Show the new business object record id
-print("RecId for new Change: {}".format(change.busObRecId))
-print("PublicId for new Change: {}".format(change.busObPublicId))
+# Send HTTP POST request to create a new Change Request
+try:
+    response = requests.post(api_endpoint, json=change_request_data, headers=headers, auth=(username, password))
+    response.raise_for_status()  # Raise an exception for HTTP errors
+
+    # Print the response details
+    print("New Change Request created successfully!")
+    print("Response Status Code:", response.status_code)
+    print("Response Content:", response.text)
+except requests.exceptions.RequestException as e:
+    print(f"Failed to create Change Request. An error occurred: {e}")

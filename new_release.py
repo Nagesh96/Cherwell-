@@ -1,40 +1,43 @@
-from CherwellAPI import Cherwell
+from CherwellAPI import CherwellClient
 
 # Replace these with your Cherwell API details
 cherwell_url = "https://your-cherwell-instance"
+api_key = "your_api_key"  # If your Cherwell instance requires an API key
 username = "your_username"
 password = "your_password"
-client_id = "your_client_id"
 
-# Connect to Cherwell
-cherwell = Cherwell(cherwell_url, username, password, client_id)
+# Create a new CherwellClient Connection
+cherwell_client = CherwellClient.Connection(cherwell_url, api_key, username, password)
 
-# Specify the fields and values for the new release
-release_data = {
-    "Short Description": "Mobile deployment prod",
+# Create a new instance of a Release business object
+release = cherwell_client.get_new_business_object("Release")
+
+# Define the properties for the new Release
+release_properties = {
+    "ShortDescription": "Mobile deployment prod",
     "Requestor": "Nagisetti, Sheela (P4567)",
-    "Request Group": "Spectrum Mobile App Support",
+    "RequestGroup": "Spectrum Mobile App Support",
     "Program": "Mobile 2.0",
     "Environment": "prod",
-    "Primary Application (CI)": "MOBILE 2.0 Back office",
-    "Release Type": "Code",  # Adjust based on your Cherwell configuration
-    "Type of Testing": "Sanity and Smoke Test",
-    "Current Planned Start Date": "2023-12-20",  # Replace with the actual date
-    "Deployment Description Summary": "Defect Fixes",
+    "PrimaryApplicationCI": "MOBILE 2.0 Back office",
+    "ReleaseType": "Code",
+    "TypeOfTesting": "Sanity and Smoke Test",
+    "CurrentPlannedStartDate": "2023-12-20",
+    "DeploymentDescriptionSummary": "Defect Fixes",
     "Build": "1.1.350",
     "Urgency": "High",
-    "Urgency Reason": "Prod Deployment",
-    "Service Impact": "Yes - Continuous",
-    "Impact to order in process": "Yes"
+    "UrgencyReason": "Prod Deployment",
+    "ServiceImpact": "Yes - Continuous",
+    "ImpactToOrderInProgress": "Yes"
 }
 
-# Create a new release
+# Set the properties of the new Release
+for key, value in release_properties.items():
+    setattr(release, key, value)
+
+# Save the new Release
 try:
-    response = cherwell.create_business_object("Release", release_data)
-    if response.get("businessObjectId"):
-        print("New release created successfully!")
-    else:
-        print("Failed to create release.")
-        print(response)
+    release.Save()
+    print("New release created successfully!")
 except Exception as e:
-    print(f"An error occurred: {e}")
+    print(f"Failed to create release. An error occurred: {e}")

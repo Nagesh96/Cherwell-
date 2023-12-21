@@ -37,4 +37,4 @@ release_data = {
     # Add other release data as needed
 }
 
-create_cherwell_release(api_url, username, password, release_data)￼Enter
+create_cherwell_release(api_url, username, password, release_data)

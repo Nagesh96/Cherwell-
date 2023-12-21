@@ -20,8 +20,10 @@ def create_cherwell_release(api_url, username, password, release_data):
 
     # Check if the request was successful (status code 200)
     if response.status_code == 200:
-        print("Release created successfully!")
-        return response.json()
+        result = response.json()
+        release_id = result.get("ReleaseID")
+        print(f"Release created successfully! Release ID: {release_id}")
+        return result
     else:
         print(f"Failed to create release. Status code: {response.status_code}")
         return None

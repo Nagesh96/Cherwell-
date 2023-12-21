@@ -1,4 +1,8 @@
-def create_change_request(api_url, username, password, release_id):
+import requests
+import json
+import base64
+
+def create_change_request(api_url, username, password, release_data):
     # Endpoint for creating a Change Request in Cherwell
     endpoint = f"{api_url}/api/V1/changeRequest"  # Adjust this if needed
 
@@ -8,9 +12,9 @@ def create_change_request(api_url, username, password, release_id):
         "Authorization": f"Basic {base64.b64encode(f'{username}:{password}'.encode('utf-8')).decode('utf-8')}"
     }
 
-    # Construct Change Request data using the Release ID
+    # Construct Change Request data using the provided release_data
     change_request_data = {
-        "ReleaseID": release_id,
+        "ReleaseID": release_data.get("ReleaseID"),
         # Add other Change Request data as needed
     }
 
@@ -42,11 +46,12 @@ release_data = {
     # Add other release data as needed
 }
 
-release_result = create_cherwell_release(api_url, username, password, release_data)
+# Corrected function name in the next line
+release_result = create_change_request(api_url, username, password, release_data)
 
 # Check if the release was created successfully
 if release_result:
     release_id = release_result.get("ReleaseID")
 
     # Create a Change Request linked to the release
-    create_change_request(api_url, username, password, release_id)
+    create_change_request(api_url, username, password, {"ReleaseID": release_id})

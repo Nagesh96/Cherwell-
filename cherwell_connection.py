@@ -29,8 +29,8 @@ def get_authorization_header(username, password):
     return f"Basic {encoded_credentials}"
 
 # Example usage
-api_url = "https://your-cherwell-instance"  # Adjust the URL
-username = "your_username"
-password = "your_password"
+api_url = ""  # Adjust the URL
+username = ""
+password = ""
 
 check_cherwell_connection(api_url, username, password)

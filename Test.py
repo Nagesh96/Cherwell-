@@ -4,7 +4,7 @@ import json
 
 def create_cherwell_release(api_url, username, password, release_data):
     # Endpoint for creating a new release
-    endpoint = f"{api_url}/api/V1/release"
+    endpoint = f"{api_url}/api/V1/object/release"
 
     # Set up headers with content type and authorization
     headers = {
@@ -26,6 +26,7 @@ def create_cherwell_release(api_url, username, password, release_data):
         return busObRecId, busObPublicId
     else:
         print(f"Failed to create a new release. Status code: {response.status_code}")
+        print(f"Response content: {response.text}")
         return None, None
 
 def get_authorization_header(username, password):

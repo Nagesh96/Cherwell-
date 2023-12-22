@@ -1,42 +1,61 @@
 import requests
 import json
-import base64
 
-def create_cherwell_release(api_url, username, password, release_data):
-    # Endpoint for creating a release in Cherwell
-    endpoint = f"{api_url}/api/V1/release"  # Adjust this if needed
+# Set the Cherwell API endpoint URL
+url = "https://your_cherwell_instance.com/CherwellAPI/api/V1/savebusinessobject"
 
-    # Set up headers with content type and authorization
-    headers = {
-        "Content-Type": "application/json",
-        "Authorization": f"Basic {base64.b64encode(f'{username}:{password}'.encode('utf-8')).decode('utf-8')}"
-    }
-
-    # Convert release data to JSON
-    release_json = json.dumps(release_data)
-
-    # Make the request to create a release
-    response = requests.post(endpoint, headers=headers, data=release_json)
-
-    # Check if the request was successful (status code 200)
-    if response.status_code == 200:
-        result = response.json()
-        release_id = result.get("ReleaseID")
-        print(f"Release created successfully! Release ID: {release_id}")
-        return result
-    else:
-        print(f"Failed to create release. Status code: {response.status_code}")
-        return None
-
-# Example usage
-api_url = "https://your-cherwell-instance"  # Adjust the URL
+# Set the Cherwell API authentication credentials
 username = "your_username"
 password = "your_password"
+client_id = "your_client_id"
+client_secret = "your_client_secret"
 
-release_data = {
-    "ReleaseName": "New Release",
-    "Description": "This is a new release.",
-    # Add other release data as needed
+# Set the Cherwell business object properties for the new release
+new_release = {
+    "busObId": "your_busObId",
+    "fields": [
+        {
+            "dirty": True,
+            "fieldId": "your_fieldId",
+            "value": "your_value"
+        },
+        {
+            "dirty": True,
+            "fieldId": "your_fieldId",
+            "value": "your_value"
+        },
+        {
+            "dirty": True,
+            "fieldId": "your_fieldId",
+            "value": "your_value"
+        }
+    ]
 }
 
-create_cherwell_release(api_url, username, password, release_data)
+# Set the Cherwell API request headers
+headers = {
+    "Content-Type": "application/json",
+    "Authorization": "Bearer " + access_token
+}
+
+# Get the Cherwell API access token
+auth_url = "https://your_cherwell_instance.com/CherwellAPI/token"
+auth_data = {
+    "grant_type": "client_credentials",
+    "client_id": client_id,
+    "client_secret": client_secret
+}
+auth_response = requests.post(auth_url, data=auth_data)
+access_token = auth_response.json()["access_token"]
+
+# Send the Cherwell API request to create the new release
+response = requests.post(url, headers=headers, data=json.dumps(new_release))
+
+# Check the Cherwell API response status code
+if response.status_code == 200:
+    response_json = response.json()
+    record_id = response_json["busObRecId"]
+    public_id = response_json["busObPublicId"]
+    print(f"New release created successfully! Record ID: {record_id}, Public ID: {public_id}")
+else:
+    print("Failed to create new release.")

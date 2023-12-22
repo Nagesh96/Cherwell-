@@ -6,9 +6,6 @@ def create_cherwell_release(api_url, username, password, release_data):
     # Endpoint for creating a new release
     endpoint = f"{api_url}/api/V1/release"
 
-    # POST /api/V1/object/{BusObName}
-
-
     # Set up headers with content type and authorization
     headers = {
         "Content-Type": "application/json",
@@ -16,7 +13,7 @@ def create_cherwell_release(api_url, username, password, release_data):
     }
 
     # Make a POST request to create a new release
-    response = requests.post(endpoint, headers=headers, data=json.dumps(release_data))
+    response = requests.post(endpoint, headers=headers, json=release_data)
 
     # Check if the release creation was successful (status code 201)
     if response.status_code == 201:

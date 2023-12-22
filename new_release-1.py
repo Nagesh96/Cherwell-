@@ -37,8 +37,8 @@ def get_authorization_header(username, password):
     return f"Basic {encoded_credentials}"
 
 # Example usage
-username = "P3214461"
-password = ""
+username = "your_username"
+password = "your_password"
 # Set the Release properties
 release = {
     "busObId": "Release",
@@ -49,7 +49,7 @@ release = {
             "Requestor": "annem, nageswara (P3214461)",
             "Request Group": "Spectrum Mobile App Support",
             "Program": "Spectrum Mobile 2.0",
-            "Environment": "QA",
+            "Environment": "QA",  # Check if this value is valid
             "Primary Application (CI)": "SPECTRUM MOBILE 2.0 BACKOFFICE (SMBO M2) QA2",
             "Release Type": "Code",
             "Type Of Testing- Required": "Smoke Test only",
@@ -58,7 +58,7 @@ release = {
             "Urgency": "Low",
             "Urgency Reason": "Defect Fixes",
             "Service Impact": "Yes - Continuous",
-            "Impacts to Orders in Procress": "Yes"
+            "Impacts to Orders in Process": "Yes"  # Corrected typo
         }
     ],
     "persist": True

@@ -2,9 +2,9 @@ import requests
 import base64
 import json
 
-def create_cherwell_release(api_url, username, password, release_data):
-    # Endpoint for creating a new release (adjust based on Cherwell's API)
-    endpoint = f"{api_url}/api/V1/releases"
+def create_cherwell_release(username, password, release):
+    # Endpoint for creating a new release
+    url = "https://charter.cherwellondemand.com/CherwellClient/CherwellAPI/api/V1/savebusinessobject"
 
     # Set up headers with content type and authorization
     headers = {
@@ -13,7 +13,8 @@ def create_cherwell_release(api_url, username, password, release_data):
     }
 
     # Make a POST request to create a new release
-    response = requests.post(endpoint, headers=headers, data=json.dumps(release_data))
+    response = requests.post(url, headers=headers, data=json.dumps(release))
+    response.raise_for_status()
 
     # Check if the release creation was successful (status code 201)
     if response.status_code == 201:
@@ -26,6 +27,7 @@ def create_cherwell_release(api_url, username, password, release_data):
         return busObRecId, busObPublicId
     else:
         print(f"Failed to create a new release. Status code: {response.status_code}")
+        print(f"Response content: {response.text}")
         return None, None
 
 def get_authorization_header(username, password):
@@ -35,14 +37,31 @@ def get_authorization_header(username, password):
     return f"Basic {encoded_credentials}"
 
 # Example usage
-api_url = ""  # Adjust the URL
-username = ""
+username = "P3214461"
 password = ""
-
-release_data = {
-    "name": "Release 1.0",
-    "description": "This is the first release of the project.",
-    # Add more relevant data based on Cherwell's API documentation
+# Set the Release properties
+release = {
+    "busObId": "Release",
+    "fields": [
+        {
+            "dirty": True,
+            "Short Description": "Providing Dummy Data for Testing purpose",
+            "Requestor": "annem, nageswara (P3214461)",
+            "Request Group": "Spectrum Mobile App Support",
+            "Program": "Spectrum Mobile 2.0",
+            "Environment": "QA",
+            "Primary Application (CI)": "SPECTRUM MOBILE 2.0 BACKOFFICE (SMBO M2) QA2",
+            "Release Type": "Code",
+            "Type Of Testing- Required": "Smoke Test only",
+            "Deployment Description Summary": "Defect Fixes",
+            "Build": "1.0.1",
+            "Urgency": "Low",
+            "Urgency Reason": "Defect Fixes",
+            "Service Impact": "Yes - Continuous",
+            "Impacts to Orders in Procress": "Yes"
+        }
+    ],
+    "persist": True
 }
 
-busObRecId, busObPublicId = create_cherwell_release(api_url, username, password, release_data)
+busObRecId, busObPublicId = create_cherwell_release(username, password, release)
